@@ -16,13 +16,12 @@ bar:SetPoint("TOP", UIParent, "TOP")
 bar:SetBackdrop({
 		bgFile = "Interface\\ChatFrame\\ChatFrameBackground", tile = true, tileSize = 16,
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 10,
-		insets = {left = 1, right = 1, top = 1, bottom = 1},
+		insets = {left = 1, right = 1, top = - 2, bottom = 1},
 })
 bar:SetBackdropColor(0, 0, 0, 0.4)
 bar:SetBackdropBorderColor(0, 0, 0, 0)
 
 local eventFunc = function(self, event, ...)
-	if not self[event] then print(self.name, event) end
 	return self[event](self, ...)
 end
 

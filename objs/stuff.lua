@@ -43,10 +43,9 @@ do
 
 	function obj:PLAYER_MONEY()
 		money = GetMoney()
-		gold = math.floor(math.abs(money / 10000))
-		silver = math.floor(math.abs(math.fmod(money / 100, 100)))
+		gold = math.floor(math.abs(money / 10000)) / 100
 
-		self.text:SetText(gold .. "." .. silver .. "k")
+		self.text:SetText(gold .. "k")
 	end
 
 	obj.init = obj.PLAYER_MONEY
@@ -103,11 +102,11 @@ do
 	local obj = bar:NewObj()
 	obj.name = "mem"
 
-	local timer = 0
+	local timer = 30
 	local mem = 0
 	function obj:OnUpdate(elapsed)
 		timer = timer + elapsed
-		if timer > 0.8 then
+		if timer > 25 then
 			mem = 0
 
 			UpdateAddOnMemoryUsage()
