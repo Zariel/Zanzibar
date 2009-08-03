@@ -2,6 +2,22 @@ local bar = _G.Zanzibar
 
 do
 	local obj = bar:NewObj()
+	obj.name = "time"
+
+	local timer = 60
+	function obj:OnUpdate(elapsed)
+		timer = timer + elapsed
+		if timer >= 59 then
+			self.text:SetText(date("%H:%M"))
+			timer = 0
+		end
+	end
+
+	bar:AddItem(obj)
+end
+
+do
+	local obj = bar:NewObj()
 
 	obj.name = "honor"
 	obj.events = { "HONOR_CURRENCY_UPDATE" }
@@ -20,22 +36,6 @@ end
 
 do
 	local obj = bar:NewObj()
-	obj.name = "time"
-
-	local timer = 60
-	function obj:OnUpdate(elapsed)
-		timer = timer + elapsed
-		if timer >= 59 then
-			self.text:SetText(date("%H:%M"))
-			timer = 0
-		end
-	end
-
-	bar:AddItem(obj)
-end
-
-do
-	local obj = bar:NewObj()
 	obj.name = "gold"
 	obj.events = { "PLAYER_MONEY" }
 
@@ -43,7 +43,7 @@ do
 
 	function obj:PLAYER_MONEY()
 		money = GetMoney()
-		gold = math.floor(math.abs(money / 10000)) / 100
+		gold = math.floor((math.abs(money / 10000)) / 100)/10
 
 		self.text:SetText(gold .. "k")
 	end
