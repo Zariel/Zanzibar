@@ -18,7 +18,7 @@ bar:SetBackdrop({
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 10,
 		insets = {left = 1, right = 1, top = 1, bottom = 1},
 })
-bar:SetBackdropColor(0, 0, 0, 0)
+bar:SetBackdropColor(0, 0, 0, 0.4)
 bar:SetBackdropBorderColor(0, 0, 0, 0)
 
 local eventFunc = function(self, event, ...)
@@ -60,7 +60,7 @@ function bar:AddItem(obj)
 	if #items > 0 then
 		f:SetPoint("LEFT", items[#items], "RIGHT", 5, 0)
 	else
-		f:SetPoint("LEFT", bar, "LEFT")
+		f:SetPoint("LEFT", bar, "LEFT", 5, 0)
 	end
 
 	local t = f:CreateFontString(nil, "ARTWORK")
@@ -118,7 +118,7 @@ function bar:AddItem(obj)
 end
 
 function bar:Reposition()
-	local width = 0
+	local width = 5
 
 	for id, obj in pairs(items) do
 		width = width + obj:GetWidth()
@@ -126,6 +126,8 @@ function bar:Reposition()
 
 	local left = (UIParent:GetCenter()) - (width / 2)
 	bar:SetPoint("LEFT", UIParent, "LEFT", left, 0)
+
+	bar:SetWidth(width + 25)
 end
 
 do
