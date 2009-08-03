@@ -42,6 +42,7 @@ function bar:PLAYER_ENTERING_WORLD()
 	end
 end
 
+local count = 0
 function bar:AddItem(obj)
 	local name = obj.name
 
@@ -49,9 +50,12 @@ function bar:AddItem(obj)
 		return registry[name]
 	end
 
+	count = count + 1
+
 	local f = CreateFrame("Frame", nil, self)
 	f.name = name
 	f.width = obj.width
+	f.id = count
 
 	f:SetHeight(20)
 
@@ -75,7 +79,11 @@ function bar:AddItem(obj)
 
 	local settext = t.SetText
 	function t:SetText(str)
-		settext(t, str .. obj.seperator)
+		if f.id == count then
+			settext(t, str)
+		else
+			settext(t, str .. obj.seperator)
+		end
 
 		local width = t:GetStringWidth() + 5
 		f:SetWidth(width)
