@@ -98,6 +98,7 @@ end
 
 do
 	local GetAddOnMemoryUsage = GetAddOnMemoryUsage
+	local UpdateAddOnMemoryUsage = UpdateAddOnMemoryUsage
 
 	local obj = bar:NewObj()
 	obj.name = "mem"
@@ -108,12 +109,19 @@ do
 		timer = timer + elapsed
 		if timer > 0.8 then
 			mem = 0
+
+			UpdateAddOnMemoryUsage()
+
 			for i = 1, GetNumAddOns() do
 				mem = mem + GetAddOnMemoryUsage(i)
 			end
 
-			self.text:SetText(mem .. "mb")
+			self.text:SetText(math.floor(mem * 100 / 1024) / 100 .. "mb")
+
+			timer = 0
 		end
 	end
+
+	bar:AddItem(obj)
 end
 
