@@ -22,23 +22,33 @@ bar:SetBackdropColor(0, 0, 0, 0.4)
 bar:SetBackdropBorderColor(0, 0, 0, 0)
 
 local eventFunc = function(self, event, ...)
+	if (event and self) and not self[event] then
+		if self.Update then
+			return self:Update(...)
+		else
+			return
+		end
+	end
+
 	return self[event](self, ...)
 end
 
 bar:SetScript("OnEvent", eventFunc)
 bar:RegisterEvent("PLAYER_ENTERING_WORLD")
 
-local scale = 0.63999998569489
-
 function bar:PLAYER_ENTERING_WORLD()
 	self.init = true
-
-	scale = UIParent:GetScale()
 
 	for init, f in pairs(queue) do
 		init(f)
 		queue[init] = nil
 	end
+
+	self:Reposition()
+end
+
+local OnLeave = function(self)
+	GameTooltip:Hide()
 end
 
 local count = 0
@@ -105,9 +115,9 @@ function bar:AddItem(obj)
 		end
 	end
 
-	if obj.OnEnter and obj.OnLeave then
+	if obj.OnEnter then
 		f:SetScript("OnEnter", obj.OnEnter)
-		f:SetScript("OnLeave", obj.OnLeave)
+		f:SetScript("OnLeave", obj.OnLeave or OnLeave)
 	end
 
 	if self.init then
@@ -116,8 +126,10 @@ function bar:AddItem(obj)
 		queue[obj.init] = f
 	end
 
+	local pos = obj.order or (#items + 1)
+
 	registry[name] = f
-	table.insert(items, f)
+	table.insert(items, pos, f)
 
 	self:Reposition()
 
@@ -125,16 +137,16 @@ function bar:AddItem(obj)
 end
 
 function bar:Reposition()
-	local width = 5
+	local width = 0
 
 	for id, obj in pairs(items) do
-		width = width + obj:GetWidth()
+		width = width + obj:GetWidth() + 5
 	end
 
 	local left = (UIParent:GetCenter()) - (width / 2)
 	bar:SetPoint("LEFT", UIParent, "LEFT", left, 0)
 
-	bar:SetWidth(width + 25)
+	bar:SetWidth(width)
 end
 
 do
@@ -157,8 +169,8 @@ do
 	function objProto:init()
 	end
 
-	function bar:NewObj()
-		return setmetatable({}, { __index = objProto })
+	function bar:NewObj(t)
+		return setmetatable(t or {}, { __index = objProto })
 	end
 end
 
